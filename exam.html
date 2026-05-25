@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Final Exam — INTIX EDUCATION</title>
+  <meta name="description" content="Take the final exam on INTIX EDUCATION and earn your verified certificate.">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" type="image/png" href="assets/logos/intix-logo.png">
+</head>
+<body>
+<div class="ambient-bg"><div class="orb orb-1"></div><div class="orb orb-2"></div></div>
+<div id="toast-container" class="toast-container"></div>
+<nav class="nav" id="main-nav"></nav>
+
+<div style="padding-top:80px;min-height:100vh">
+  <div class="container" style="padding-top:32px;padding-bottom:80px;max-width:760px">
+
+    <!-- Exam Intro Screen -->
+    <div id="intro-screen">
+      <div class="glass-card" style="padding:48px;text-align:center">
+        <div style="font-size:64px;margin-bottom:20px">🎯</div>
+        <h1 style="font-family:var(--font-display);font-size:32px;font-weight:800;margin-bottom:12px">Final Exam</h1>
+        <p id="intro-course-name" style="font-size:18px;color:var(--text-secondary);margin-bottom:32px"></p>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:440px;margin:0 auto 40px">
+          <div class="glass-card" style="padding:20px;text-align:center">
+            <div style="font-size:28px;font-weight:800;font-family:var(--font-display);color:var(--blue)">10</div>
+            <div style="font-size:12px;color:var(--text-muted);margin-top:4px">Questions</div>
+          </div>
+          <div class="glass-card" style="padding:20px;text-align:center">
+            <div style="font-size:28px;font-weight:800;font-family:var(--font-display);color:var(--purple)">20</div>
+            <div style="font-size:12px;color:var(--text-muted);margin-top:4px">Total Marks</div>
+          </div>
+          <div class="glass-card" style="padding:20px;text-align:center">
+            <div style="font-size:28px;font-weight:800;font-family:var(--font-display);color:#22c55e">60%</div>
+            <div style="font-size:12px;color:var(--text-muted);margin-top:4px">Pass Mark</div>
+          </div>
+        </div>
+        <div style="background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.15);border-radius:12px;padding:16px;margin-bottom:32px;text-align:left">
+          <div style="font-weight:700;font-size:13px;color:#fbbf24;margin-bottom:8px">📋 Exam Rules</div>
+          <div style="font-size:13px;color:var(--text-secondary);line-height:1.8">
+            • Answer all 10 multiple-choice questions<br>
+            • Each correct answer = 2 marks (20 total)<br>
+            • You need 12/20 (60%) to pass<br>
+            • You can retry unlimited times<br>
+            • Pass to earn your verified certificate
+          </div>
+        </div>
+        <div id="prev-score-info" style="display:none;margin-bottom:24px"></div>
+        <button class="btn btn-primary btn-lg" onclick="startExam()" style="width:100%;justify-content:center">
+          🚀 Start Final Exam
+        </button>
+      </div>
+    </div>
+
+    <!-- Exam Questions Screen -->
+    <div id="exam-screen" style="display:none">
+      <!-- Progress Header -->
+      <div class="glass-card" style="padding:20px 28px;margin-bottom:24px;display:flex;align-items:center;justify-content:space-between">
+        <div style="font-size:14px;font-weight:600" id="q-counter">Question 1 of 10</div>
+        <div style="display:flex;align-items:center;gap:12px">
+          <div style="font-size:13px;color:var(--text-muted)">Score: <span id="live-score" style="color:var(--blue);font-weight:700">0</span>/20</div>
+          <div style="width:120px">
+            <div class="progress-bar"><div class="progress-fill" id="exam-progress" style="width:0%"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Question Card -->
+      <div id="question-card" class="glass-card exam-question"></div>
+
+      <!-- Navigation -->
+      <div style="display:flex;justify-content:flex-end;margin-top:20px" id="exam-nav">
+        <button class="btn btn-primary" onclick="nextQuestion()" id="next-q-btn" style="opacity:0.4;pointer-events:none">
+          Next Question →
+        </button>
+      </div>
+    </div>
+
+    <!-- Results Screen -->
+    <div id="result-screen" style="display:none">
+      <div class="glass-card score-card">
+        <div id="result-emoji" style="font-size:64px;margin-bottom:20px"></div>
+        <h2 style="font-family:var(--font-display);font-size:28px;font-weight:800;margin-bottom:8px" id="result-title"></h2>
+        <p id="result-subtitle" style="color:var(--text-secondary);margin-bottom:32px"></p>
+
+        <div class="score-circle" id="score-circle">
+          <div class="score-num" id="score-display"></div>
+          <div class="score-total">/20</div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin:24px 0">
+          <div style="text-align:center">
+            <div style="font-size:22px;font-weight:800;font-family:var(--font-display)" id="res-correct" style="color:#22c55e"></div>
+            <div style="font-size:12px;color:var(--text-muted)">Correct</div>
+          </div>
+          <div style="text-align:center">
+            <div style="font-size:22px;font-weight:800;font-family:var(--font-display)" id="res-wrong" style="color:#ef4444"></div>
+            <div style="font-size:12px;color:var(--text-muted)">Wrong</div>
+          </div>
+          <div style="text-align:center">
+            <div style="font-size:22px;font-weight:800;font-family:var(--font-display)" id="res-pct"></div>
+            <div style="font-size:12px;color:var(--text-muted)">Score %</div>
+          </div>
+        </div>
+
+        <div id="pass-actions" style="display:none;flex-direction:column;gap:12px;width:100%">
+          <button class="btn btn-primary btn-lg" onclick="goToCertificate()" style="justify-content:center;width:100%">
+            🏆 Get My Certificate
+          </button>
+          <button class="btn btn-ghost" onclick="retryExam()" style="justify-content:center">Retake Exam</button>
+        </div>
+        <div id="fail-actions" style="display:none;flex-direction:column;gap:12px;width:100%">
+          <button class="btn btn-primary btn-lg" onclick="retryExam()" style="justify-content:center;width:100%">
+            🔄 Try Again
+          </button>
+          <button class="btn btn-ghost" onclick="window.location.href='course-view.html?id='+currentCourseId" style="justify-content:center">Review Course</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="js/storage.js"></script>
+<script src="js/courses.js"></script>
+<script>
+  let currentCourseId = '';
+  let currentCourse = null;
+  let questions = [];
+  let currentQIndex = 0;
+  let score = 0;
+  let answered = false;
+
+  function init() {
+    const urlParams = new URLSearchParams(window.location.search);
+    currentCourseId = urlParams.get('course');
+    if (!currentCourseId) { window.location.href = 'courses.html'; return; }
+
+    const user = INTIX.requireAuth();
+    if (!user) return;
+
+    currentCourse = COURSES.find(c => c.id === currentCourseId);
+    if (!currentCourse) { window.location.href = 'courses.html'; return; }
+
+    renderNav('courses');
+    document.title = `Exam: ${currentCourse.title} — INTIX`;
+    document.getElementById('intro-course-name').textContent = `${currentCourse.emoji} ${currentCourse.title}`;
+
+    // Show previous score if exists
+    const prevScore = INTIX.getScore(currentCourseId);
+    if (prevScore) {
+      const info = document.getElementById('prev-score-info');
+      info.style.display = 'block';
+      info.innerHTML = `
+        <div style="background:rgba(59,130,246,0.08);border:1px solid rgba(59,130,246,0.15);border-radius:10px;padding:14px">
+          <span style="font-size:13px;color:var(--text-secondary)">Previous attempt: <strong style="color:${prevScore.passed ? '#22c55e' : '#ef4444'}">${prevScore.score}/20 — ${prevScore.passed ? 'PASSED ✓' : 'FAILED'}</strong></span>
+        </div>
+      `;
+    }
+  }
+
+  function startExam() {
+    if (!INTIX.hasCompletedAssessment(currentCourseId)) {
+      toast('Please complete the assessment first! 📝', 'error');
+      setTimeout(() => window.location.href = `assessment.html?course=${currentCourseId}`, 1200);
+      return;
+    }
+
+    questions = getExamQuestions(currentCourseId).slice(0, 10);
+    // Shuffle
+    questions = questions.sort(() => Math.random() - 0.5);
+    currentQIndex = 0;
+    score = 0;
+
+    document.getElementById('intro-screen').style.display = 'none';
+    document.getElementById('exam-screen').style.display = 'block';
+    loadQuestion();
+  }
+
+  function loadQuestion() {
+    const q = questions[currentQIndex];
+    answered = false;
+
+    document.getElementById('q-counter').textContent = `Question ${currentQIndex + 1} of ${questions.length}`;
+    document.getElementById('exam-progress').style.width = `${(currentQIndex / questions.length) * 100}%`;
+    document.getElementById('next-q-btn').style.opacity = '0.4';
+    document.getElementById('next-q-btn').style.pointerEvents = 'none';
+
+    // Shuffle options
+    const optIndices = [0,1,2,3].sort(() => Math.random() - 0.5);
+    const correctOpt = q.opts[q.ans];
+
+    document.getElementById('question-card').innerHTML = `
+      <div style="margin-bottom:8px;font-size:12px;color:var(--text-muted)">QUESTION ${currentQIndex + 1}</div>
+      <p class="question-text">${q.q}</p>
+      <div class="question-options">
+        ${optIndices.map((oi, display) => `
+          <button class="option-btn" id="opt-${display}" onclick="selectAnswer(${display}, '${q.opts[oi].replace(/'/g,"\\'")}', '${correctOpt.replace(/'/g,"\\'")}', ${oi})">
+            <span class="option-letter">${String.fromCharCode(65+display)}</span>
+            ${q.opts[oi]}
+          </button>
+        `).join('')}
+      </div>
+    `;
+
+    // Store shuffled answer mapping
+    window._shuffled = optIndices;
+    window._correctOpt = correctOpt;
+  }
+
+  function selectAnswer(displayIndex, selectedText, correctText, originalIndex) {
+    if (answered) return;
+    answered = true;
+
+    const isCorrect = selectedText === correctText;
+    if (isCorrect) {
+      score += 2;
+      document.getElementById('live-score').textContent = score;
+    }
+
+    // Show all buttons with correct/wrong states
+    window._shuffled.forEach((oi, di) => {
+      const btn = document.getElementById('opt-' + di);
+      btn.disabled = true;
+      if (window._shuffled[di] === window._shuffled[window._shuffled.indexOf(window._shuffled.find((_, i) => questions[currentQIndex].opts[window._shuffled[i]] === window._correctOpt))]) {
+        // Correct answer button
+      }
+      if (questions[currentQIndex].opts[oi] === correctText) {
+        btn.classList.add('correct');
+      } else if (di === displayIndex && !isCorrect) {
+        btn.classList.add('wrong');
+      }
+    });
+
+    if (isCorrect) toast('Correct! +2 marks 🎉', 'success');
+    else toast('Incorrect. Keep going! 💪', 'error');
+
+    document.getElementById('next-q-btn').style.opacity = '1';
+    document.getElementById('next-q-btn').style.pointerEvents = 'auto';
+
+    if (currentQIndex === questions.length - 1) {
+      document.getElementById('next-q-btn').textContent = 'See Results →';
+    }
+  }
+
+  async function nextQuestion() {
+    currentQIndex++;
+    if (currentQIndex < questions.length) {
+      loadQuestion();
+    } else {
+      showResults();
+    }
+  }
+
+  async function showResults() {
+    const total = 20;
+    const passed = score >= 12;
+    INTIX.setScore(currentCourseId, score, total);
+
+    document.getElementById('exam-screen').style.display = 'none';
+    document.getElementById('result-screen').style.display = 'block';
+
+    document.getElementById('result-emoji').textContent = passed ? '🏆' : '😤';
+    document.getElementById('result-title').textContent = passed ? 'Congratulations! You Passed!' : 'Not Quite — Try Again!';
+    document.getElementById('result-subtitle').textContent = passed
+      ? `You scored ${score}/20 and earned your certificate!`
+      : `You scored ${score}/20. You need 12/20 to pass. Keep studying!`;
+
+    document.getElementById('score-display').textContent = score;
+    document.getElementById('score-display').className = 'score-num ' + (passed ? 'score-pass' : 'score-fail');
+
+    const correct = score / 2;
+    const wrong = questions.length - correct;
+    document.getElementById('res-correct').textContent = correct;
+    document.getElementById('res-correct').style.color = '#22c55e';
+    document.getElementById('res-wrong').textContent = wrong;
+    document.getElementById('res-wrong').style.color = '#ef4444';
+    document.getElementById('res-pct').textContent = Math.round((score/total)*100) + '%';
+
+    if (passed) {
+      document.getElementById('pass-actions').style.display = 'flex';
+      // Add certificate
+      const user = INTIX.getUser();
+      INTIX.addCertificate({ courseId: currentCourseId, courseName: currentCourse.title, studentName: user.name, score, total });
+      await sendTelegram(`🏆 <b>Exam Passed!</b>\n👤 ${user?.name}\n📧 ${user?.email}\n📖 ${currentCourse.title}\n✅ Score: ${score}/${total}\n🕐 ${new Date().toLocaleString('en-IN')}`);
+    } else {
+      document.getElementById('fail-actions').style.display = 'flex';
+    }
+
+    // Animate score
+    let displayScore = 0;
+    const target = score;
+    const interval = setInterval(() => {
+      displayScore = Math.min(displayScore + 1, target);
+      document.getElementById('score-display').textContent = displayScore;
+      if (displayScore >= target) clearInterval(interval);
+    }, 80);
+  }
+
+  function goToCertificate() {
+    window.location.href = `certificate.html?course=${currentCourseId}`;
+  }
+
+  function retryExam() {
+    document.getElementById('result-screen').style.display = 'none';
+    document.getElementById('intro-screen').style.display = 'block';
+    score = 0;
+  }
+
+  init();
+</script>
+</body>
+</html>

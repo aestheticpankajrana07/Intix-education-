@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Course Viewer — INTIX EDUCATION</title>
+  <meta name="description" content="Learn with structured lessons, embedded videos, and progress tracking on INTIX EDUCATION.">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" type="image/png" href="assets/logos/intix-logo.png">
+</head>
+<body>
+<div class="ambient-bg"><div class="orb orb-1"></div><div class="orb orb-2"></div></div>
+<div id="toast-container" class="toast-container"></div>
+<nav class="nav" id="main-nav"></nav>
+
+<div style="padding-top:80px;min-height:100vh">
+  <div class="container" style="padding-top:32px;padding-bottom:80px">
+    <!-- Breadcrumb -->
+    <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-muted);margin-bottom:24px">
+      <a href="courses.html" style="color:var(--blue)">Courses</a>
+      <span>›</span>
+      <span id="breadcrumb-title">Loading...</span>
+    </div>
+
+    <!-- Course Header -->
+    <div class="glass-card" style="padding:28px 32px;margin-bottom:28px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px">
+      <div style="display:flex;align-items:center;gap:20px">
+        <div style="font-size:48px" id="course-emoji">🤖</div>
+        <div>
+          <h1 style="font-family:var(--font-display);font-size:24px;font-weight:800;margin-bottom:6px" id="course-title">Loading...</h1>
+          <div style="display:flex;gap:12px;flex-wrap:wrap">
+            <span class="badge badge-blue" id="course-category"></span>
+            <span class="badge badge-purple" id="course-level"></span>
+            <span id="course-duration" style="font-size:13px;color:var(--text-muted)"></span>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:16px">
+        <div style="text-align:center">
+          <div style="font-family:var(--font-display);font-size:24px;font-weight:800;color:var(--blue)" id="progress-pct">0%</div>
+          <div style="font-size:12px;color:var(--text-muted)">Complete</div>
+        </div>
+        <div style="width:80px">
+          <div class="progress-bar"><div class="progress-fill" id="progress-bar" style="width:0%"></div></div>
+        </div>
+        <button class="btn btn-primary btn-sm" onclick="goToAssessment()" id="assessment-btn" style="display:none">Assessment →</button>
+      </div>
+    </div>
+
+    <!-- Sidebar + Content Layout -->
+    <div class="sidebar-layout">
+      <!-- Sidebar -->
+      <div class="sidebar">
+        <div class="glass-card sidebar-card">
+          <div class="sidebar-title">📚 Course Lessons</div>
+          <div class="lesson-list" id="lesson-list"></div>
+          <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--border)">
+            <div style="font-size:12px;color:var(--text-muted);margin-bottom:12px">COURSE ACTIONS</div>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <button class="btn btn-ghost btn-sm" onclick="goToAssessment()" id="sidebar-assessment-btn">📝 Take Assessment</button>
+              <button class="btn btn-ghost btn-sm" onclick="goToExam()" id="sidebar-exam-btn">🎯 Final Exam</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Progress Card -->
+        <div class="glass-card sidebar-card" style="margin-top:16px">
+          <div class="sidebar-title">📊 Your Progress</div>
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px">
+                <span>Lessons Completed</span>
+                <span id="lessons-done-count" style="color:var(--blue);font-weight:700">0/0</span>
+              </div>
+              <div class="progress-bar"><div class="progress-fill" id="sidebar-progress" style="width:0%"></div></div>
+            </div>
+            <div id="cert-status" style="display:none">
+              <div style="background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.2);border-radius:10px;padding:12px;text-align:center">
+                <div style="font-size:20px">🏆</div>
+                <div style="font-size:13px;font-weight:700;color:#22c55e;margin-top:4px">Certificate Earned!</div>
+                <button class="btn btn-success btn-sm" style="margin-top:8px;width:100%;justify-content:center" onclick="window.location.href='certificate.html?course='+currentCourseId">View Certificate</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Content -->
+      <div>
+        <!-- Video -->
+        <div class="glass-card" style="margin-bottom:24px;overflow:hidden">
+          <div class="video-container" id="video-container">
+            <iframe id="lesson-video" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          </div>
+        </div>
+
+        <!-- Lesson Content -->
+        <div class="glass-card" style="padding:32px;margin-bottom:24px">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px">
+            <div>
+              <div style="font-size:12px;color:var(--text-muted);margin-bottom:6px" id="lesson-num-label">LESSON 1</div>
+              <h2 style="font-family:var(--font-display);font-size:22px;font-weight:800" id="lesson-title">Loading...</h2>
+            </div>
+            <button class="btn btn-primary" onclick="completeCurrentLesson()" id="complete-btn">
+              Mark Complete ✓
+            </button>
+          </div>
+          <div class="divider" style="margin:0 0 24px"></div>
+          <div id="lesson-content" style="font-size:15px;line-height:1.85;color:var(--text-secondary)"></div>
+
+          <!-- Key Takeaways -->
+          <div id="takeaways" style="margin-top:28px;background:rgba(59,130,246,0.05);border:1px solid rgba(59,130,246,0.1);border-radius:12px;padding:20px">
+            <div style="font-size:13px;font-weight:700;color:var(--blue);margin-bottom:12px">💡 Key Takeaways</div>
+            <div id="takeaways-list"></div>
+          </div>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:16px">
+          <button class="btn btn-ghost" onclick="prevLesson()" id="prev-btn" disabled>← Previous</button>
+          <div style="font-size:13px;color:var(--text-muted)" id="lesson-indicator">1 / 6</div>
+          <button class="btn btn-primary" onclick="nextLesson()" id="next-btn">Next Lesson →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="js/storage.js"></script>
+<script src="js/courses.js"></script>
+<script>
+  let currentCourseId = '';
+  let currentCourse = null;
+  let currentLessonIndex = 0;
+
+  const takeawaysMap = {
+    0: ['AI simulates human intelligence processes', 'Narrow AI handles specific tasks, General AI is theoretical', 'AI is already in everyday apps and services'],
+    1: ['Machine learning learns patterns from data', 'Three main types: supervised, unsupervised, reinforcement', 'Neural networks mimic the human brain structure'],
+    2: ['Prompt engineering is the new programming skill', 'RCTFC framework: Role, Context, Task, Format, Constraints', 'Clear communication = better AI outputs'],
+    3: ['Zero-shot vs few-shot prompting serve different needs', 'Chain-of-thought improves reasoning accuracy', 'Build a personal prompt library for consistency'],
+    4: ['HTML structures content, CSS styles it, JS adds behavior', 'Responsive design works across all screen sizes', 'Deploy for free on Netlify or Vercel'],
+    5: ['Design Thinking: Empathize → Define → Ideate → Prototype → Test', 'Visual hierarchy guides the user\'s eye', 'Accessibility is a fundamental design requirement']
+  };
+
+  function init() {
+    const urlParams = new URLSearchParams(window.location.search);
+    currentCourseId = urlParams.get('id');
+    if (!currentCourseId) { window.location.href = 'courses.html'; return; }
+
+    const user = INTIX.requireAuth();
+    if (!user) return;
+
+    currentCourse = COURSES.find(c => c.id === currentCourseId);
+    if (!currentCourse) { window.location.href = 'courses.html'; return; }
+
+    if (currentCourse.isPremium && !INTIX.hasPremium(currentCourseId)) {
+      window.location.href = `payment.html?course=${currentCourseId}`;
+      return;
+    }
+
+    renderNav('courses');
+    document.title = currentCourse.title + ' — INTIX EDUCATION';
+    document.getElementById('breadcrumb-title').textContent = currentCourse.title;
+    document.getElementById('course-emoji').textContent = currentCourse.emoji;
+    document.getElementById('course-title').textContent = currentCourse.title;
+    document.getElementById('course-category').textContent = currentCourse.category;
+    document.getElementById('course-level').textContent = currentCourse.level;
+    document.getElementById('course-duration').textContent = '⏱ ' + currentCourse.duration;
+
+    const prog = INTIX.getProgress(currentCourseId);
+    currentLessonIndex = prog.currentLesson || 0;
+
+    renderLessonList();
+    loadLesson(currentLessonIndex);
+    updateProgress();
+
+    if (INTIX.hasCertificate(currentCourseId)) {
+      document.getElementById('cert-status').style.display = 'block';
+    }
+    INTIX.getStreak();
+  }
+
+  function renderLessonList() {
+    const prog = INTIX.getProgress(currentCourseId);
+    const list = document.getElementById('lesson-list');
+    list.innerHTML = currentCourse.lessons_data.map((l, i) => {
+      const isCompleted = prog.completed.includes(i);
+      const isActive = i === currentLessonIndex;
+      return `
+        <div class="lesson-item ${isActive ? 'active' : ''} ${isCompleted ? 'completed' : ''}" onclick="loadLesson(${i})">
+          <div class="lesson-num">${isCompleted ? '✓' : i + 1}</div>
+          <span style="font-size:13px">${l.title}</span>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function loadLesson(index) {
+    currentLessonIndex = index;
+    const lesson = currentCourse.lessons_data[index];
+    if (!lesson) return;
+
+    document.getElementById('lesson-num-label').textContent = `LESSON ${index + 1} OF ${currentCourse.lessons_data.length}`;
+    document.getElementById('lesson-title').textContent = lesson.title;
+    document.getElementById('lesson-content').textContent = lesson.content;
+    document.getElementById('lesson-indicator').textContent = `${index + 1} / ${currentCourse.lessons_data.length}`;
+
+    // Video
+    const videoSrc = `https://www.youtube.com/embed/${lesson.videoId}?rel=0&modestbranding=1`;
+    document.getElementById('lesson-video').src = videoSrc;
+
+    // Takeaways
+    const tks = takeawaysMap[index] || ['Watch the video for key insights', 'Practice what you learn immediately', 'Take notes and revisit key concepts'];
+    document.getElementById('takeaways-list').innerHTML = tks.map(t => `
+      <div style="display:flex;align-items:flex-start;gap:8px;margin-bottom:8px;font-size:13px;color:var(--text-secondary)">
+        <span style="color:var(--blue);flex-shrink:0;margin-top:1px">→</span> ${t}
+      </div>
+    `).join('');
+
+    // Buttons
+    document.getElementById('prev-btn').disabled = index === 0;
+    const isLast = index === currentCourse.lessons_data.length - 1;
+    document.getElementById('next-btn').textContent = isLast ? 'Go to Assessment →' : 'Next Lesson →';
+
+    const prog = INTIX.getProgress(currentCourseId);
+    const isDone = prog.completed.includes(index);
+    const completeBtn = document.getElementById('complete-btn');
+    completeBtn.textContent = isDone ? '✓ Completed' : 'Mark Complete ✓';
+    completeBtn.style.background = isDone ? 'rgba(34,197,94,0.15)' : '';
+    completeBtn.style.border = isDone ? '1px solid rgba(34,197,94,0.3)' : '';
+    completeBtn.style.color = isDone ? '#22c55e' : '';
+    if (isDone) completeBtn.style.backgroundImage = 'none';
+
+    renderLessonList();
+    updateProgress();
+  }
+
+  async function completeCurrentLesson() {
+    INTIX.completeLesson(currentCourseId, currentLessonIndex);
+    toast('Lesson completed! 🎉', 'success');
+    renderLessonList();
+    updateProgress();
+    loadLesson(currentLessonIndex);
+
+    const prog = INTIX.getProgress(currentCourseId);
+    const total = currentCourse.lessons_data.length;
+    if (prog.completed.length === total) {
+      toast('Course complete! Time for Assessment 🚀', 'success');
+      document.getElementById('assessment-btn').style.display = 'block';
+      await sendTelegram(`📚 <b>Course Complete</b>\n👤 ${INTIX.getUser()?.name}\n📧 ${INTIX.getUser()?.email}\n📖 ${currentCourse.title}\n🕐 ${new Date().toLocaleString('en-IN')}`);
+    }
+  }
+
+  function updateProgress() {
+    const prog = INTIX.getProgress(currentCourseId);
+    const total = currentCourse.lessons_data.length;
+    const pct = Math.round((prog.completed.length / total) * 100);
+    document.getElementById('progress-pct').textContent = pct + '%';
+    document.getElementById('progress-bar').style.width = pct + '%';
+    document.getElementById('sidebar-progress').style.width = pct + '%';
+    document.getElementById('lessons-done-count').textContent = `${prog.completed.length}/${total}`;
+    if (pct >= 80) document.getElementById('assessment-btn').style.display = 'block';
+  }
+
+  function prevLesson() { if (currentLessonIndex > 0) loadLesson(currentLessonIndex - 1); }
+  function nextLesson() {
+    if (currentLessonIndex < currentCourse.lessons_data.length - 1) {
+      loadLesson(currentLessonIndex + 1);
+    } else {
+      goToAssessment();
+    }
+  }
+  function goToAssessment() { window.location.href = `assessment.html?course=${currentCourseId}`; }
+  function goToExam() { window.location.href = `exam.html?course=${currentCourseId}`; }
+
+  init();
+</script>
+</body>
+</html>

@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Certificate — INTIX EDUCATION</title>
+  <meta name="description" content="Download your verified INTIX EDUCATION certificate after passing the final exam.">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" type="image/png" href="assets/logos/intix-logo.png">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+<body>
+<div class="ambient-bg"><div class="orb orb-1"></div><div class="orb orb-2"></div></div>
+<div id="toast-container" class="toast-container"></div>
+<nav class="nav" id="main-nav"></nav>
+
+<div style="padding-top:80px;min-height:100vh">
+  <div class="container" style="padding-top:40px;padding-bottom:80px">
+
+    <!-- Not Passed State -->
+    <div id="not-passed" style="display:none;text-align:center;padding:80px 20px">
+      <div style="font-size:64px;margin-bottom:20px">🔒</div>
+      <h2 style="font-family:var(--font-display);font-size:28px;font-weight:800;margin-bottom:12px">Certificate Locked</h2>
+      <p style="color:var(--text-secondary);margin-bottom:32px">You need to pass the final exam to earn this certificate.</p>
+      <a href="#" id="goto-exam-link" class="btn btn-primary btn-lg">Take Final Exam →</a>
+    </div>
+
+    <!-- Certificate Content -->
+    <div id="cert-content" style="display:none">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:32px;flex-wrap:wrap;gap:16px">
+        <div>
+          <h1 style="font-family:var(--font-display);font-size:28px;font-weight:800;margin-bottom:8px">🏆 Certificate of Completion</h1>
+          <p style="color:var(--text-secondary)">Your INTIX verified certificate — download and share with pride</p>
+        </div>
+        <div style="display:flex;gap:12px;flex-wrap:wrap">
+          <button class="btn btn-ghost" onclick="shareCert()">🔗 Share</button>
+          <button class="btn btn-primary" onclick="downloadCert()">
+            <span id="download-text">⬇ Download PDF</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Certificate -->
+      <div id="certificate-container" style="font-family:'DM Sans',sans-serif">
+        <!-- Decorative corners -->
+        <div style="position:absolute;top:20px;left:20px;width:60px;height:60px;border-top:2px solid rgba(59,130,246,0.4);border-left:2px solid rgba(59,130,246,0.4);border-radius:4px 0 0 0"></div>
+        <div style="position:absolute;top:20px;right:20px;width:60px;height:60px;border-top:2px solid rgba(139,92,246,0.4);border-right:2px solid rgba(139,92,246,0.4);border-radius:0 4px 0 0"></div>
+        <div style="position:absolute;bottom:20px;left:20px;width:60px;height:60px;border-bottom:2px solid rgba(59,130,246,0.4);border-left:2px solid rgba(59,130,246,0.4);border-radius:0 0 0 4px"></div>
+        <div style="position:absolute;bottom:20px;right:20px;width:60px;height:60px;border-bottom:2px solid rgba(139,92,246,0.4);border-right:2px solid rgba(139,92,246,0.4);border-radius:0 0 4px 0"></div>
+        <div class="cert-watermark">INTIX</div>
+
+        <!-- Header -->
+        <div class="cert-header">
+          <div style="width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,var(--blue),var(--purple));display:flex;align-items:center;justify-content:center;font-size:24px">∞</div>
+          <div>
+            <div class="cert-logo-text">INTIX EDUCATION</div>
+            <div style="font-size:11px;letter-spacing:0.15em;color:var(--text-muted);text-transform:uppercase">India's Futuristic Learning Platform</div>
+          </div>
+        </div>
+
+        <div class="cert-divider"></div>
+        <div class="cert-subtitle">CERTIFICATE OF COMPLETION</div>
+        <div style="margin:16px 0;font-size:15px;color:var(--text-secondary)">This is to certify that</div>
+
+        <div class="cert-name" id="cert-student-name">Student Name</div>
+
+        <div style="font-size:15px;color:var(--text-secondary);margin:12px 0">has successfully completed</div>
+        <div class="cert-course" id="cert-course-name">Course Name</div>
+        <div style="font-size:14px;color:var(--text-muted);margin-top:4px" id="cert-score-display"></div>
+
+        <div class="cert-badge">⬡ INTIX 2026 VERIFIED CERTIFICATE</div>
+
+        <!-- Footer Info -->
+        <div class="cert-footer">
+          <div class="cert-footer-item">
+            <div class="cert-footer-label">Date of Completion</div>
+            <div class="cert-footer-value" id="cert-date"></div>
+          </div>
+          <div class="cert-footer-item">
+            <div class="cert-footer-label">Certificate ID</div>
+            <div class="cert-footer-value" id="cert-id" style="color:var(--blue);font-size:13px"></div>
+          </div>
+          <div class="cert-footer-item">
+            <div class="cert-footer-label">Authorized By</div>
+            <div class="cert-footer-value" style="font-style:italic;font-size:17px">Pushkar Rana</div>
+            <div style="font-size:11px;color:var(--text-muted);margin-top:2px">Founder, INTIX Education</div>
+          </div>
+        </div>
+
+        <!-- Seal -->
+        <div style="position:absolute;bottom:60px;right:60px;width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,rgba(59,130,246,0.1),rgba(139,92,246,0.1));border:2px solid rgba(59,130,246,0.2);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center">
+          <div style="font-size:20px">✦</div>
+          <div style="font-size:8px;color:var(--blue);font-weight:700;letter-spacing:0.05em">VERIFIED</div>
+        </div>
+      </div>
+
+      <!-- Share / Actions -->
+      <div style="display:flex;gap:20px;margin-top:32px;flex-wrap:wrap">
+        <div class="glass-card" style="padding:24px;flex:1;min-width:200px">
+          <div style="font-size:20px;margin-bottom:8px">📤</div>
+          <div style="font-weight:700;margin-bottom:4px">Share on LinkedIn</div>
+          <div style="font-size:13px;color:var(--text-muted);margin-bottom:16px">Add this certificate to your professional profile</div>
+          <button class="btn btn-ghost btn-sm" onclick="shareLinkedIn()">Share on LinkedIn</button>
+        </div>
+        <div class="glass-card" style="padding:24px;flex:1;min-width:200px">
+          <div style="font-size:20px;margin-bottom:8px">🎓</div>
+          <div style="font-weight:700;margin-bottom:4px">All Certificates</div>
+          <div style="font-size:13px;color:var(--text-muted);margin-bottom:16px">View all your earned certificates in one place</div>
+          <button class="btn btn-ghost btn-sm" onclick="window.location.href='profile.html'">View Profile</button>
+        </div>
+        <div class="glass-card" style="padding:24px;flex:1;min-width:200px">
+          <div style="font-size:20px;margin-bottom:8px">📚</div>
+          <div style="font-weight:700;margin-bottom:4px">Next Course</div>
+          <div style="font-size:13px;color:var(--text-muted);margin-bottom:16px">Keep building your skills with the next course</div>
+          <button class="btn btn-primary btn-sm" onclick="window.location.href='courses.html'">Explore Courses →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="js/storage.js"></script>
+<script src="js/courses.js"></script>
+<script>
+  let certData = null;
+  let currentCourseId = '';
+
+  async function init() {
+    const urlParams = new URLSearchParams(window.location.search);
+    currentCourseId = urlParams.get('course');
+    if (!currentCourseId) { window.location.href = 'courses.html'; return; }
+
+    const user = INTIX.requireAuth();
+    if (!user) return;
+
+    renderNav('courses');
+
+    const passed = INTIX.hasPassed(currentCourseId);
+    const course = COURSES.find(c => c.id === currentCourseId);
+
+    if (!passed) {
+      document.getElementById('not-passed').style.display = 'block';
+      document.getElementById('goto-exam-link').href = `exam.html?course=${currentCourseId}`;
+      return;
+    }
+
+    document.getElementById('cert-content').style.display = 'block';
+
+    // Get or create certificate
+    let certs = INTIX.getCertificates();
+    certData = certs.find(c => c.courseId === currentCourseId);
+    if (!certData) {
+      const score = INTIX.getScore(currentCourseId);
+      INTIX.addCertificate({ courseId: currentCourseId, courseName: course.title, studentName: user.name, score: score?.score || 0, total: 20 });
+      certs = INTIX.getCertificates();
+      certData = certs.find(c => c.courseId === currentCourseId);
+    }
+
+    // Fill certificate
+    const dateStr = new Date(certData.date).toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' });
+    document.getElementById('cert-student-name').textContent = certData.studentName || user.name;
+    document.getElementById('cert-course-name').textContent = certData.courseName || course.title;
+    document.getElementById('cert-date').textContent = dateStr;
+    document.getElementById('cert-id').textContent = certData.id;
+    document.getElementById('cert-score-display').textContent = `Score: ${certData.score}/20 — With Distinction`;
+
+    // Send Telegram on first visit
+    const notifKey = 'cert_notif_' + currentCourseId;
+    if (!localStorage.getItem(notifKey)) {
+      await sendTelegram(`🏅 <b>Certificate Generated</b>\n👤 ${user.name}\n📧 ${user.email}\n📖 ${course.title}\n🆔 ${certData.id}\n🕐 ${new Date().toLocaleString('en-IN')}`);
+      localStorage.setItem(notifKey, '1');
+    }
+  }
+
+  async function downloadCert() {
+    const btn = document.getElementById('download-text');
+    btn.textContent = '⏳ Generating...';
+
+    try {
+      const { jsPDF } = window.jspdf;
+      const element = document.getElementById('certificate-container');
+
+      const canvas = await html2canvas(element, {
+        scale: 2,
+        useCORS: true,
+        backgroundColor: '#0a0e1a',
+        logging: false
+      });
+
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = pdf.internal.pageSize.getHeight();
+
+      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+
+      const filename = `INTIX_Certificate_${(certData?.studentName || 'Student').replace(/\s+/g,'_')}_${currentCourseId}.pdf`;
+      pdf.save(filename);
+      toast('Certificate downloaded! 🏆', 'success');
+    } catch (err) {
+      console.error(err);
+      toast('Download failed. Try again.', 'error');
+    }
+
+    btn.textContent = '⬇ Download PDF';
+  }
+
+  function shareCert() {
+    const text = `🏆 I just earned a certificate from INTIX EDUCATION!\n\nCourse: ${certData?.courseName}\nCertificate ID: ${certData?.id}\n\nLearn for free at intixeducation.netlify.app`;
+    if (navigator.share) {
+      navigator.share({ title: 'INTIX Certificate', text });
+    } else {
+      navigator.clipboard.writeText(text);
+      toast('Certificate info copied to clipboard!', 'success');
+    }
+  }
+
+  function shareLinkedIn() {
+    const url = `https://www.linkedin.com/sharing/share-offsite/?url=https://intixeducation.netlify.app&summary=I earned a certificate in ${encodeURIComponent(certData?.courseName || 'AI Skills')} from INTIX EDUCATION!`;
+    window.open(url, '_blank');
+  }
+
+  init();
+</script>
+</body>
+</html>

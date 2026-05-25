@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Profile — INTIX EDUCATION</title>
+  <meta name="description" content="Track your learning progress, certificates, and achievements on INTIX EDUCATION.">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" type="image/png" href="assets/logos/intix-logo.png">
+</head>
+<body>
+<div class="ambient-bg"><div class="orb orb-1"></div><div class="orb orb-2"></div></div>
+<div id="toast-container" class="toast-container"></div>
+<nav class="nav" id="main-nav"></nav>
+
+<div style="padding-top:80px;min-height:100vh">
+  <div class="container" style="padding-top:40px;padding-bottom:80px">
+
+    <!-- Not logged in state -->
+    <div id="not-logged" style="display:none;text-align:center;padding:80px 20px">
+      <div style="font-size:64px;margin-bottom:20px">👤</div>
+      <h2 style="font-family:var(--font-display);font-size:28px;font-weight:800;margin-bottom:12px">Your Learning Profile</h2>
+      <p style="color:var(--text-secondary);margin-bottom:32px">Sign in to track your progress, certificates, and learning streak.</p>
+      <button class="btn btn-primary btn-lg" onclick="document.getElementById('login-modal').classList.add('active')">Sign In to View Profile</button>
+    </div>
+
+    <!-- Profile Content -->
+    <div id="profile-content" style="display:none">
+      <div style="margin-bottom:32px">
+        <div class="section-tag">Your Dashboard</div>
+        <h1 style="font-family:var(--font-display);font-size:36px;font-weight:800">Learning Profile</h1>
+      </div>
+
+      <div class="profile-grid">
+        <!-- Left: User Card -->
+        <div>
+          <div class="glass-card profile-card" style="margin-bottom:20px">
+            <div class="profile-avatar-lg" id="profile-avatar">P</div>
+            <h2 style="font-family:var(--font-display);font-size:22px;font-weight:800;margin-bottom:6px" id="profile-name">Name</h2>
+            <div style="font-size:13px;color:var(--text-muted);margin-bottom:16px" id="profile-email">email</div>
+            <div class="badge badge-blue" style="margin-bottom:16px">🌟 INTIX Learner</div>
+            <div style="display:flex;flex-direction:column;gap:12px;width:100%;text-align:left;margin-top:16px;padding-top:16px;border-top:1px solid var(--border)">
+              <div style="display:flex;justify-content:space-between;font-size:13px">
+                <span style="color:var(--text-muted)">Member since</span>
+                <span id="member-since" style="font-weight:600"></span>
+              </div>
+              <div style="display:flex;justify-content:space-between;font-size:13px">
+                <span style="color:var(--text-muted)">Premium access</span>
+                <span id="premium-status" style="font-weight:600"></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Streak Card -->
+          <div class="glass-card" style="padding:24px;text-align:center;margin-bottom:20px;background:linear-gradient(135deg,rgba(251,146,60,0.06),rgba(239,68,68,0.06));border-color:rgba(251,146,60,0.15)">
+            <div style="font-size:40px;margin-bottom:8px">🔥</div>
+            <div style="font-family:var(--font-display);font-size:48px;font-weight:800;color:#fb923c" id="streak-count">0</div>
+            <div style="font-size:14px;color:var(--text-muted)">Day Learning Streak</div>
+          </div>
+
+          <!-- Quick Actions -->
+          <div class="glass-card" style="padding:24px">
+            <div style="font-weight:700;font-size:14px;margin-bottom:16px">Quick Actions</div>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <a href="courses.html" class="btn btn-ghost btn-sm" style="justify-content:flex-start">📚 Browse Courses</a>
+              <a href="courses.html?tab=premium" class="btn btn-ghost btn-sm" style="justify-content:flex-start">⭐ Premium Courses</a>
+              <button class="btn btn-danger btn-sm" onclick="INTIX.logout()" style="justify-content:flex-start">🚪 Sign Out</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Stats and Progress -->
+        <div>
+          <!-- Stats Grid -->
+          <div class="stat-grid" style="margin-bottom:24px">
+            <div class="glass-card stat-card">
+              <div style="font-size:24px;margin-bottom:8px">📚</div>
+              <div class="stat-value gradient-text" id="stat-courses">0</div>
+              <div class="stat-label">Courses Completed</div>
+            </div>
+            <div class="glass-card stat-card">
+              <div style="font-size:24px;margin-bottom:8px">🏆</div>
+              <div class="stat-value gradient-text" id="stat-certs">0</div>
+              <div class="stat-label">Certificates Earned</div>
+            </div>
+            <div class="glass-card stat-card">
+              <div style="font-size:24px;margin-bottom:8px">📖</div>
+              <div class="stat-value gradient-text" id="stat-lessons">0</div>
+              <div class="stat-label">Lessons Completed</div>
+            </div>
+            <div class="glass-card stat-card">
+              <div style="font-size:24px;margin-bottom:8px">⭐</div>
+              <div class="stat-value gradient-text" id="stat-premium">0</div>
+              <div class="stat-label">Premium Courses</div>
+            </div>
+          </div>
+
+          <!-- Active Courses -->
+          <div class="glass-card" style="padding:28px;margin-bottom:24px">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+              <h3 style="font-family:var(--font-display);font-size:18px;font-weight:700">📊 Course Progress</h3>
+              <a href="courses.html" style="font-size:13px;color:var(--blue)">View all →</a>
+            </div>
+            <div id="course-progress-list">
+              <div style="text-align:center;padding:40px 20px;color:var(--text-muted)">
+                <div style="font-size:32px;margin-bottom:12px">📚</div>
+                <p>No courses started yet</p>
+                <a href="courses.html" class="btn btn-primary btn-sm" style="display:inline-flex;margin-top:12px">Start Learning</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Certificates -->
+          <div class="glass-card" style="padding:28px">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+              <h3 style="font-family:var(--font-display);font-size:18px;font-weight:700">🏆 My Certificates</h3>
+            </div>
+            <div id="certificates-list">
+              <div style="text-align:center;padding:40px 20px;color:var(--text-muted)">
+                <div style="font-size:32px;margin-bottom:12px">🔒</div>
+                <p>No certificates yet</p>
+                <p style="font-size:13px;margin-top:8px">Pass a final exam to earn your first certificate</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Login Modal -->
+<div class="modal-overlay" id="login-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="document.getElementById('login-modal').classList.remove('active')">✕</button>
+    <h2 class="modal-title">Sign In to INTIX</h2>
+    <p class="modal-desc">Enter your details to access your profile.</p>
+    <div class="form-group">
+      <label class="form-label">Full Name</label>
+      <input type="text" class="form-input" id="login-name" placeholder="Your full name">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Gmail Address</label>
+      <input type="email" class="form-input" id="login-email" placeholder="yourname@gmail.com">
+    </div>
+    <button class="btn btn-primary" style="width:100%;justify-content:center;padding:14px" onclick="handleLogin()">Sign In 🚀</button>
+  </div>
+</div>
+
+<script src="js/storage.js"></script>
+<script src="js/courses.js"></script>
+<script>
+  function init() {
+    renderNav('profile');
+    const user = INTIX.getUser();
+
+    if (!user) {
+      document.getElementById('not-logged').style.display = 'block';
+      return;
+    }
+
+    document.getElementById('profile-content').style.display = 'block';
+    document.getElementById('profile-avatar').textContent = user.name.charAt(0).toUpperCase();
+    document.getElementById('profile-name').textContent = user.name;
+    document.getElementById('profile-email').textContent = user.email;
+    document.getElementById('member-since').textContent = new Date().toLocaleDateString('en-IN', { month: 'short', year: 'numeric' });
+
+    const premium = INTIX.getPremiumAccess();
+    document.getElementById('premium-status').textContent = premium.length > 0 ? `${premium.length} course(s) ✓` : 'None';
+    document.getElementById('premium-status').style.color = premium.length > 0 ? '#22c55e' : 'var(--text-muted)';
+
+    const streak = INTIX.getStreak();
+    document.getElementById('streak-count').textContent = streak.count;
+
+    const certs = INTIX.getCertificates();
+    const scores = INTIX.getAllScores();
+    const lessonsCompleted = INTIX.totalLessonsCompleted();
+    const coursesCompleted = INTIX.completedCourses();
+
+    document.getElementById('stat-courses').textContent = coursesCompleted;
+    document.getElementById('stat-certs').textContent = certs.length;
+    document.getElementById('stat-lessons').textContent = lessonsCompleted;
+    document.getElementById('stat-premium').textContent = premium.length;
+
+    renderCourseProgress();
+    renderCertificates(certs);
+  }
+
+  function renderCourseProgress() {
+    const allProgress = INTIX.getAllProgress();
+    const courseIds = Object.keys(allProgress).filter(id => allProgress[id].completed?.length > 0);
+
+    if (courseIds.length === 0) return;
+
+    const list = document.getElementById('course-progress-list');
+    list.innerHTML = courseIds.map(courseId => {
+      const course = COURSES.find(c => c.id === courseId);
+      if (!course) return '';
+      const prog = allProgress[courseId];
+      const total = course.lessons_data?.length || course.lessons;
+      const pct = Math.round((prog.completed.length / total) * 100);
+      const score = INTIX.getScore(courseId);
+      const hasCert = INTIX.hasCertificate(courseId);
+
+      return `
+        <div style="display:flex;align-items:center;gap:16px;padding:14px 0;border-bottom:1px solid var(--border)">
+          <div style="font-size:28px;flex-shrink:0">${course.emoji}</div>
+          <div style="flex:1;min-width:0">
+            <div style="font-weight:600;font-size:14px;margin-bottom:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${course.title}</div>
+            <div class="progress-bar" style="height:4px"><div class="progress-fill" style="width:${pct}%"></div></div>
+            <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text-muted);margin-top:4px">
+              <span>${prog.completed.length}/${total} lessons</span>
+              <span>${pct}%</span>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
+            ${hasCert ? `<span class="badge badge-green">🏆 Certified</span>` : score ? `<span class="badge badge-${score.passed ? 'green' : 'orange'}">${score.passed ? 'Passed' : `${score.score}/20`}</span>` : ''}
+            <a href="course-view.html?id=${courseId}" class="btn btn-ghost btn-sm">Continue</a>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function renderCertificates(certs) {
+    if (certs.length === 0) return;
+
+    const list = document.getElementById('certificates-list');
+    list.innerHTML = certs.map(cert => {
+      const dateStr = new Date(cert.date).toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' });
+      const course = COURSES.find(c => c.id === cert.courseId);
+      return `
+        <div class="cert-earned-card glass-card" style="margin-bottom:12px">
+          <div class="cert-icon">${course?.emoji || '🎓'}</div>
+          <div style="flex:1">
+            <div style="font-weight:700;font-size:14px;margin-bottom:4px">${cert.courseName}</div>
+            <div style="font-size:12px;color:var(--text-muted)">Earned ${dateStr}</div>
+            <div style="font-size:11px;color:var(--blue);margin-top:2px">ID: ${cert.id}</div>
+          </div>
+          <div style="display:flex;gap:8px">
+            <a href="certificate.html?course=${cert.courseId}" class="btn btn-primary btn-sm">View</a>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  async function handleLogin() {
+    const name = document.getElementById('login-name').value.trim();
+    const email = document.getElementById('login-email').value.trim();
+    if (!name || !email) { toast('Fill all fields', 'error'); return; }
+    INTIX.setUser({ name, email });
+    INTIX.logUser({ name, email });
+    document.getElementById('login-modal').classList.remove('active');
+    init();
+    toast('Welcome back, ' + name + '!', 'success');
+    await sendTelegram(`🔐 <b>Login</b>\n👤 ${name}\n📧 ${email}\n🕐 ${new Date().toLocaleString('en-IN')}`);
+  }
+
+  init();
+</script>
+</body>
+</html>

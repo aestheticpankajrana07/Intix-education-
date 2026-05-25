@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Assessment — INTIX EDUCATION</title>
+  <meta name="description" content="Complete your course assessment before the final exam on INTIX EDUCATION.">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" type="image/png" href="assets/logos/intix-logo.png">
+</head>
+<body>
+<div class="ambient-bg"><div class="orb orb-1"></div><div class="orb orb-2"></div></div>
+<div id="toast-container" class="toast-container"></div>
+<nav class="nav" id="main-nav"></nav>
+
+<div style="padding-top:80px;min-height:100vh">
+  <div class="container" style="padding-top:32px;padding-bottom:80px;max-width:800px">
+
+    <!-- Header -->
+    <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-muted);margin-bottom:24px">
+      <a href="courses.html" style="color:var(--blue)">Courses</a>
+      <span>›</span>
+      <a id="back-course" href="#" style="color:var(--blue)">Course</a>
+      <span>›</span>
+      <span>Assessment</span>
+    </div>
+
+    <div class="glass-card" style="padding:32px;margin-bottom:32px;text-align:center">
+      <div style="font-size:48px;margin-bottom:16px">📝</div>
+      <h1 style="font-family:var(--font-display);font-size:28px;font-weight:800;margin-bottom:12px">Course Assessment</h1>
+      <p style="color:var(--text-secondary);font-size:15px;max-width:500px;margin:0 auto" id="assessment-subtitle">Complete all tasks to unlock the Final Exam</p>
+      <div id="already-done-banner" style="display:none;margin-top:20px;background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.2);border-radius:12px;padding:16px">
+        <span style="color:#22c55e;font-weight:700">✓ Assessment Already Completed!</span>
+        <p style="color:var(--text-muted);font-size:13px;margin-top:4px">You can retake it or go directly to the exam.</p>
+      </div>
+    </div>
+
+    <!-- Assessment Tasks -->
+    <div id="tasks-container"></div>
+
+    <!-- Submit Button -->
+    <div style="text-align:center;margin-top:32px">
+      <button class="btn btn-primary btn-lg" onclick="submitAssessment()" id="submit-btn" style="opacity:0.5;pointer-events:none">
+        Submit Assessment & Unlock Exam 🎯
+      </button>
+      <p style="font-size:13px;color:var(--text-muted);margin-top:12px">Complete all tasks to enable submission</p>
+      <div style="margin-top:16px">
+        <button class="btn btn-ghost" onclick="goToExam()" id="goto-exam-btn" style="display:none">
+          Go to Final Exam →
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="js/storage.js"></script>
+<script src="js/courses.js"></script>
+<script>
+  let currentCourseId = '';
+  let currentCourse = null;
+  let taskCompletion = {};
+
+  const assessmentData = {
+    'ai-basics': {
+      tasks: [
+        { id: 't1', type: 'mcq', title: 'Quick Knowledge Check', desc: 'Answer this question to show your understanding.', question: 'In your own words, what is the difference between AI and Machine Learning?', options: ['They are the same thing', 'AI is the broader field; ML is a subset technique within AI', 'ML is broader; AI is a type of ML', 'Neither are related'], correct: 1 },
+        { id: 't2', type: 'write', title: 'Reflection Exercise', desc: 'Write at least 2 sentences about how AI affects your daily life.' },
+        { id: 't3', type: 'checklist', title: 'Lesson Completion Check', items: ['I understand what Narrow AI is', 'I know the difference between supervised and unsupervised learning', 'I can explain a neural network simply'] }
+      ]
+    },
+    'prompt-engineering': {
+      tasks: [
+        { id: 't1', type: 'write', title: 'Write a Prompt', desc: 'Using the RCTFC framework, write a complete prompt for: "Generate a marketing email for a new coffee shop."' },
+        { id: 't2', type: 'mcq', title: 'Technique Identification', desc: 'Which technique is best for complex reasoning tasks?', question: 'What prompting technique involves asking the AI to think step by step?', options: ['Zero-shot prompting', 'Role assignment', 'Chain-of-thought prompting', 'Few-shot prompting'], correct: 2 },
+        { id: 't3', type: 'checklist', title: 'Skills Checklist', items: ['I can write a zero-shot prompt', 'I understand few-shot examples', 'I can apply chain-of-thought technique'] }
+      ]
+    }
+  };
+
+  function getDefaultAssessment(course) {
+    return {
+      tasks: [
+        { id: 't1', type: 'write', title: 'Key Learnings Reflection', desc: `Write 3 key things you learned from "${course.title}". Be specific and thoughtful.` },
+        { id: 't2', type: 'checklist', title: 'Course Completion Verification', items: [`I watched all lessons in ${course.title}`, 'I understand the core concepts covered', 'I\'m ready to take the final exam'] },
+        { id: 't3', type: 'write', title: 'Real-World Application', desc: 'How will you apply what you learned from this course in your life or career? Write at least 2 sentences.' }
+      ]
+    };
+  }
+
+  function init() {
+    const urlParams = new URLSearchParams(window.location.search);
+    currentCourseId = urlParams.get('course');
+    if (!currentCourseId) { window.location.href = 'courses.html'; return; }
+
+    const user = INTIX.requireAuth();
+    if (!user) return;
+
+    currentCourse = COURSES.find(c => c.id === currentCourseId);
+    if (!currentCourse) { window.location.href = 'courses.html'; return; }
+
+    renderNav('courses');
+    document.title = `Assessment: ${currentCourse.title} — INTIX`;
+    document.getElementById('back-course').href = `course-view.html?id=${currentCourseId}`;
+    document.getElementById('back-course').textContent = currentCourse.title;
+    document.getElementById('assessment-subtitle').textContent = `${currentCourse.emoji} ${currentCourse.title}`;
+
+    if (INTIX.hasCompletedAssessment(currentCourseId)) {
+      document.getElementById('already-done-banner').style.display = 'block';
+      document.getElementById('goto-exam-btn').style.display = 'inline-flex';
+    }
+
+    const data = assessmentData[currentCourseId] || getDefaultAssessment(currentCourse);
+    renderTasks(data.tasks);
+  }
+
+  function renderTasks(tasks) {
+    const container = document.getElementById('tasks-container');
+    container.innerHTML = tasks.map((task, i) => {
+      let inner = '';
+      if (task.type === 'write') {
+        inner = `<textarea class="task-textarea" placeholder="Write your answer here..." id="task-${task.id}" oninput="checkTaskWrite('${task.id}', this.value)" rows="4"></textarea>`;
+      } else if (task.type === 'mcq') {
+        inner = `
+          <p style="font-weight:600;margin-bottom:14px;font-size:15px">${task.question}</p>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            ${task.options.map((opt, oi) => `
+              <button class="option-btn" id="opt-${task.id}-${oi}" onclick="selectMCQ('${task.id}', ${oi}, ${task.correct})">
+                <span class="option-letter">${String.fromCharCode(65+oi)}</span> ${opt}
+              </button>
+            `).join('')}
+          </div>
+        `;
+      } else if (task.type === 'checklist') {
+        inner = task.items.map((item, ii) => `
+          <label class="task-check" id="check-${task.id}-${ii}" style="display:flex;align-items:center;gap:10px;padding:10px;border-radius:8px;cursor:pointer;transition:background 0.2s">
+            <input type="checkbox" onchange="updateChecklist('${task.id}', ${task.items.length})" style="width:16px;height:16px;accent-color:var(--blue)">
+            <span style="font-size:14px">${item}</span>
+          </label>
+        `).join('');
+      }
+
+      return `
+        <div class="glass-card assessment-task" style="margin-bottom:20px" data-aos data-aos-delay="${i*100}">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px">
+            <div style="width:32px;height:32px;border-radius:8px;background:rgba(59,130,246,0.1);border:1px solid rgba(59,130,246,0.15);display:flex;align-items:center;justify-content:center;font-weight:800;color:var(--blue)">${i+1}</div>
+            <div>
+              <h3 class="task-title" style="margin-bottom:2px">${task.title}</h3>
+              <div id="status-${task.id}" style="font-size:12px;color:var(--text-muted)">Not completed</div>
+            </div>
+            <div style="margin-left:auto;display:none" id="check-icon-${task.id}">
+              <div style="width:24px;height:24px;border-radius:50%;background:rgba(34,197,94,0.15);border:1px solid rgba(34,197,94,0.3);display:flex;align-items:center;justify-content:center;color:#22c55e;font-size:14px">✓</div>
+            </div>
+          </div>
+          ${task.desc ? `<p class="task-desc">${task.desc}</p>` : ''}
+          ${inner}
+        </div>
+      `;
+    }).join('');
+  }
+
+  function markTaskDone(taskId) {
+    taskCompletion[taskId] = true;
+    document.getElementById('status-' + taskId).textContent = 'Completed ✓';
+    document.getElementById('status-' + taskId).style.color = '#22c55e';
+    document.getElementById('check-icon-' + taskId).style.display = 'block';
+    checkAllDone();
+  }
+
+  function checkTaskWrite(taskId, value) {
+    if (value.trim().length >= 30) markTaskDone(taskId);
+  }
+
+  function selectMCQ(taskId, index, correct) {
+    document.querySelectorAll(`[id^="opt-${taskId}-"]`).forEach(btn => {
+      btn.classList.remove('selected', 'correct', 'wrong');
+      btn.disabled = true;
+    });
+    const btn = document.getElementById(`opt-${taskId}-${index}`);
+    if (index === correct) {
+      btn.classList.add('correct');
+      toast('Correct! ✓', 'success');
+      markTaskDone(taskId);
+    } else {
+      btn.classList.add('wrong');
+      document.getElementById(`opt-${taskId}-${correct}`).classList.add('correct');
+      toast('Not quite, but that\'s okay! Keep learning.', 'info');
+      markTaskDone(taskId); // Still mark done even if wrong
+    }
+  }
+
+  function updateChecklist(taskId, total) {
+    const checked = document.querySelectorAll(`[id^="check-${taskId}-"] input:checked`).length;
+    if (checked === total) markTaskDone(taskId);
+  }
+
+  function checkAllDone() {
+    const taskEls = document.querySelectorAll('[id^="check-icon-"]');
+    const allDone = [...taskEls].every(el => el.style.display === 'block');
+    const submitBtn = document.getElementById('submit-btn');
+    if (allDone) {
+      submitBtn.style.opacity = '1';
+      submitBtn.style.pointerEvents = 'auto';
+    }
+  }
+
+  async function submitAssessment() {
+    INTIX.setAssessment(currentCourseId, { courseId: currentCourseId, tasks: taskCompletion });
+    toast('Assessment submitted! Unlocking exam... 🎯', 'success');
+
+    const user = INTIX.getUser();
+    await sendTelegram(`📝 <b>Assessment Complete</b>\n👤 ${user?.name}\n📧 ${user?.email}\n📖 ${currentCourse.title}\n🕐 ${new Date().toLocaleString('en-IN')}`);
+
+    setTimeout(() => window.location.href = `exam.html?course=${currentCourseId}`, 1200);
+  }
+
+  function goToExam() { window.location.href = `exam.html?course=${currentCourseId}`; }
+
+  init();
+</script>
+</body>
+</html>

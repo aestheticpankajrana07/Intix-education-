@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Courses — INTIX EDUCATION | Free AI & Future Skills Courses India</title>
+  <meta name="description" content="Browse 16+ free and premium courses on AI, Web Development, UI/UX Design, Entrepreneurship, and more. Earn verified certificates from INTIX EDUCATION.">
+  <meta name="keywords" content="INTIX courses, free AI courses india, intix free certification course, intix free certificate, intix education courses, AI course free certificate, web dev course india, UI UX design course, prompt engineering course free, digital entrepreneurship course, generative AI course free, social media growth course, startup course india">
+  <link rel="canonical" href="https://intixeducation.netlify.app/courses.html">
+  <meta property="og:title" content="INTIX EDUCATION — Course Catalog">
+  <meta property="og:description" content="16+ free courses with verified certificates. AI, Web Dev, Design, Business and more.">
+  <meta property="og:image" content="https://intixeducation.netlify.app/assets/logos/intix-logo.png">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" type="image/png" href="assets/logos/intix-logo.png">
+</head>
+<body>
+<div class="ambient-bg"><div class="orb orb-1"></div><div class="orb orb-2"></div><div class="orb orb-3"></div></div>
+<div id="toast-container" class="toast-container"></div>
+<nav class="nav" id="main-nav"></nav>
+
+<div style="padding-top:80px">
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="container">
+      <div class="section-tag" style="justify-content:center" data-aos>Course Library</div>
+      <h1 class="page-header-title" data-aos>All Courses</h1>
+      <p class="page-header-desc" data-aos>16+ courses spanning AI, Web Dev, Design, Business, and more. Free to start. Certificates to earn.</p>
+    </div>
+  </div>
+
+  <div class="container" style="padding-bottom:80px">
+    <!-- Filter & Tab Bar -->
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:32px;flex-wrap:wrap;gap:16px">
+      <div class="tabs">
+        <button class="tab-btn active" id="tab-free" onclick="switchTab('free')">Free Courses</button>
+        <button class="tab-btn" id="tab-premium" onclick="switchTab('premium')">⭐ Premium</button>
+        <button class="tab-btn" id="tab-all" onclick="switchTab('all')">All</button>
+      </div>
+      <div class="filter-bar" style="margin-bottom:0">
+        <button class="filter-btn active" data-filter="all" onclick="setFilter('all')">All</button>
+        <button class="filter-btn" data-filter="AI" onclick="setFilter('AI')">🤖 AI</button>
+        <button class="filter-btn" data-filter="Development" onclick="setFilter('Development')">💻 Dev</button>
+        <button class="filter-btn" data-filter="Design" onclick="setFilter('Design')">🎨 Design</button>
+        <button class="filter-btn" data-filter="Business" onclick="setFilter('Business')">💼 Business</button>
+        <button class="filter-btn" data-filter="Marketing" onclick="setFilter('Marketing')">📊 Marketing</button>
+        <button class="filter-btn" data-filter="Productivity" onclick="setFilter('Productivity')">⚙️ Productivity</button>
+        <button class="filter-btn" data-filter="Career" onclick="setFilter('Career')">🔮 Career</button>
+      </div>
+    </div>
+
+    <!-- Stats Bar -->
+    <div style="display:flex;gap:24px;margin-bottom:36px;flex-wrap:wrap">
+      <div class="glass-card" style="padding:16px 24px;display:flex;align-items:center;gap:12px">
+        <span style="font-size:20px">📚</span>
+        <div>
+          <div id="course-count-display" style="font-family:var(--font-display);font-size:22px;font-weight:800">16</div>
+          <div style="font-size:12px;color:var(--text-muted)">Total Courses</div>
+        </div>
+      </div>
+      <div class="glass-card" style="padding:16px 24px;display:flex;align-items:center;gap:12px">
+        <span style="font-size:20px">🏆</span>
+        <div>
+          <div id="user-certs-count" style="font-family:var(--font-display);font-size:22px;font-weight:800">0</div>
+          <div style="font-size:12px;color:var(--text-muted)">My Certificates</div>
+        </div>
+      </div>
+      <div class="glass-card" style="padding:16px 24px;display:flex;align-items:center;gap:12px">
+        <span style="font-size:20px">🔥</span>
+        <div>
+          <div id="user-streak" style="font-family:var(--font-display);font-size:22px;font-weight:800">0</div>
+          <div style="font-size:12px;color:var(--text-muted)">Day Streak</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Courses Grid -->
+    <div class="courses-grid" id="courses-grid"></div>
+
+    <!-- Empty state -->
+    <div id="empty-state" style="display:none;text-align:center;padding:60px 20px">
+      <div style="font-size:48px;margin-bottom:16px">🔍</div>
+      <h3 style="font-family:var(--font-display);margin-bottom:8px">No courses found</h3>
+      <p style="color:var(--text-muted)">Try a different filter</p>
+    </div>
+  </div>
+</div>
+
+<!-- Login Modal (inline) -->
+<div class="modal-overlay" id="login-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <h2 class="modal-title">Join INTIX</h2>
+    <p class="modal-desc">Create your free account to start learning and earning certificates.</p>
+    <div class="form-group">
+      <label class="form-label">Full Name</label>
+      <input type="text" class="form-input" id="login-name" placeholder="Your full name">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Gmail Address</label>
+      <input type="email" class="form-input" id="login-email" placeholder="yourname@gmail.com">
+    </div>
+    <button class="btn btn-primary" style="width:100%;justify-content:center;padding:14px" onclick="handleLogin()">Start Learning 🚀</button>
+  </div>
+</div>
+
+<script src="js/storage.js"></script>
+<script src="js/courses.js"></script>
+<script>
+  renderNav('courses');
+
+  let currentTab = 'free';
+  let currentFilter = 'all';
+
+  // Check URL params
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('tab') === 'premium') { currentTab = 'premium'; }
+
+  function switchTab(tab) {
+    currentTab = tab;
+    ['free','premium','all'].forEach(t => {
+      document.getElementById('tab-'+t).classList.toggle('active', t === tab);
+    });
+    renderCourses();
+  }
+
+  function setFilter(f) {
+    currentFilter = f;
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.filter === f);
+    });
+    renderCourses();
+  }
+
+  function renderCourses() {
+    let filtered = COURSES;
+    if (currentTab === 'free') filtered = filtered.filter(c => !c.isPremium);
+    if (currentTab === 'premium') filtered = filtered.filter(c => c.isPremium);
+    if (currentFilter !== 'all') filtered = filtered.filter(c => c.category === currentFilter);
+
+    document.getElementById('course-count-display').textContent = filtered.length;
+    const grid = document.getElementById('courses-grid');
+    const empty = document.getElementById('empty-state');
+
+    if (filtered.length === 0) {
+      grid.innerHTML = '';
+      empty.style.display = 'block';
+      return;
+    }
+    empty.style.display = 'none';
+
+    grid.innerHTML = filtered.map(c => {
+      const progress = INTIX.getCompletionPercent(c.id, c.lessons_data?.length || c.lessons);
+      const hasCert = INTIX.hasCertificate(c.id);
+      const isPremiumLocked = c.isPremium && !INTIX.hasPremium(c.id);
+
+      return `
+        <div class="glass-card course-card ${c.isPremium ? 'premium' : ''} ${hasCert ? '' : ''}" onclick="openCourse('${c.id}', ${c.isPremium})" style="cursor:pointer">
+          <div class="course-card-thumb" style="position:relative">
+            <span style="font-size:56px;position:relative;z-index:1">${c.emoji}</span>
+            ${isPremiumLocked ? '<div class="premium-lock-overlay">🔐</div>' : ''}
+          </div>
+          <div class="course-card-body">
+            <div class="course-card-top">
+              <span class="badge badge-${c.category === 'AI' ? 'blue' : c.category === 'Development' ? 'purple' : c.category === 'Design' ? 'cyan' : 'green'}">${c.category}</span>
+              ${c.isPremium ? '<span class="badge badge-premium">⭐ PREMIUM</span>' : `<span class="badge badge-blue">${c.level}</span>`}
+            </div>
+            <h3 class="course-card-title">${c.title}</h3>
+            <p class="course-card-desc">${c.desc}</p>
+            <div class="course-card-meta">
+              <span>📚 ${c.lessons_data?.length || c.lessons} lessons</span>
+              <span>⏱ ${c.duration}</span>
+            </div>
+            ${progress > 0 ? `
+              <div style="margin-top:14px">
+                <div class="progress-bar"><div class="progress-fill" style="width:${progress}%"></div></div>
+                <div style="font-size:11px;color:var(--text-muted);margin-top:4px">${progress}% complete</div>
+              </div>
+            ` : ''}
+            <div class="course-card-footer">
+              <div style="display:flex;align-items:center;gap:8px">
+                ${c.isPremium ? `<span class="course-price-paid">₹${c.price}</span>` : '<span class="course-price-free">FREE</span>'}
+                ${hasCert ? '<span class="badge badge-green">🏆 Certified</span>' : ''}
+              </div>
+              <button class="btn btn-primary btn-sm">${isPremiumLocked ? '🔐 Unlock' : progress > 0 ? 'Continue →' : 'Start →'}</button>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function openCourse(id, isPremium) {
+    const user = INTIX.getUser();
+    if (!user) {
+      openModal();
+      return;
+    }
+    if (isPremium && !INTIX.hasPremium(id)) {
+      window.location.href = `payment.html?course=${id}`;
+      return;
+    }
+    window.location.href = `course-view.html?id=${id}`;
+  }
+
+  function openModal() { document.getElementById('login-modal').classList.add('active'); }
+  function closeModal() { document.getElementById('login-modal').classList.remove('active'); }
+
+  async function handleLogin() {
+    const name = document.getElementById('login-name').value.trim();
+    const email = document.getElementById('login-email').value.trim();
+    if (!name || !email) { toast('Please fill all fields', 'error'); return; }
+    const user = { name, email };
+    INTIX.setUser(user);
+    INTIX.logUser(user);
+    closeModal();
+    toast('Welcome, ' + name + '! 🚀', 'success');
+    renderNav('courses');
+    renderCourses();
+    await sendTelegram(`🔐 <b>New Login</b>\n👤 ${name}\n📧 ${email}\n🕐 ${new Date().toLocaleString('en-IN')}`);
+  }
+
+  // Update stats
+  function updateStats() {
+    document.getElementById('user-certs-count').textContent = INTIX.getCertificates().length;
+    document.getElementById('user-streak').textContent = INTIX.getStreak().count;
+  }
+
+  switchTab(currentTab);
+  updateStats();
+</script>
+</body>
+</html>

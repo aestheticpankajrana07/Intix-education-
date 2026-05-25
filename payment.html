@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payment — INTIX EDUCATION</title>
+  <meta name="description" content="Unlock premium courses on INTIX EDUCATION with a one-time payment of ₹49.">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" type="image/png" href="assets/logos/intix-logo.png">
+</head>
+<body>
+<div class="ambient-bg"><div class="orb orb-1"></div><div class="orb orb-2"></div></div>
+<div id="toast-container" class="toast-container"></div>
+<nav class="nav" id="main-nav"></nav>
+
+<div style="padding-top:80px;min-height:100vh;display:flex;align-items:flex-start;justify-content:center;padding-bottom:80px">
+  <div class="container" style="padding-top:40px;max-width:900px">
+
+    <!-- Breadcrumb -->
+    <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-muted);margin-bottom:32px">
+      <a href="courses.html" style="color:var(--blue)">Courses</a>
+      <span>›</span>
+      <span>Payment</span>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:start" id="payment-layout">
+
+      <!-- Left: Course Info -->
+      <div>
+        <div class="glass-card" style="padding:32px;margin-bottom:20px">
+          <div style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:16px">UNLOCKING COURSE</div>
+          <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px">
+            <div style="font-size:48px" id="payment-emoji">🔥</div>
+            <div>
+              <h2 style="font-family:var(--font-display);font-size:20px;font-weight:800;margin-bottom:6px" id="payment-course-name">Course Name</h2>
+              <div style="display:flex;gap:8px">
+                <span class="badge badge-premium">⭐ PREMIUM</span>
+                <span class="badge badge-orange" id="payment-level">Advanced</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <div style="display:flex;align-items:center;gap:10px;font-size:14px">
+              <span style="color:#22c55e">✓</span> Lifetime access to all lessons
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;font-size:14px">
+              <span style="color:#22c55e">✓</span> Advanced content & projects
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;font-size:14px">
+              <span style="color:#22c55e">✓</span> Premium certificate on completion
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;font-size:14px">
+              <span style="color:#22c55e">✓</span> Assessment + Final exam
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div style="display:flex;align-items:center;justify-content:space-between">
+            <span style="color:var(--text-muted)">Total Amount</span>
+            <div>
+              <span style="font-size:12px;color:var(--text-muted);text-decoration:line-through;margin-right:8px">₹499</span>
+              <span class="payment-amount" style="font-size:32px;color:#fbbf24">₹<span>49</span></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="glass-card" style="padding:20px;background:rgba(34,197,94,0.04);border-color:rgba(34,197,94,0.1)">
+          <div style="font-size:13px;font-weight:700;color:#22c55e;margin-bottom:8px">🔒 Secure Payment</div>
+          <p style="font-size:12px;color:var(--text-muted);line-height:1.7">Payment is processed manually via UPI. Access is granted within minutes of confirmation. Contact us if not activated within 1 hour.</p>
+        </div>
+      </div>
+
+      <!-- Right: Payment -->
+      <div>
+        <div class="glass-card payment-card" style="text-align:center">
+          <!-- Step Indicator -->
+          <div style="display:flex;align-items:center;justify-content:center;gap:0;margin-bottom:28px">
+            <div id="step-1-indicator" style="display:flex;align-items:center;gap:8px">
+              <div style="width:28px;height:28px;border-radius:50%;background:var(--blue);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700">1</div>
+              <span style="font-size:13px;font-weight:600">Scan & Pay</span>
+            </div>
+            <div style="width:40px;height:1px;background:var(--border);margin:0 12px"></div>
+            <div id="step-2-indicator" style="display:flex;align-items:center;gap:8px;opacity:0.4">
+              <div style="width:28px;height:28px;border-radius:50%;background:var(--border);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700">2</div>
+              <span style="font-size:13px;font-weight:600">Confirm</span>
+            </div>
+          </div>
+
+          <!-- QR Code -->
+          <div id="scan-step">
+            <div style="font-size:14px;color:var(--text-secondary);margin-bottom:16px">Scan the QR code to pay</div>
+            <div class="qr-container">
+              <!-- Dynamic QR using api.qrserver.com -->
+              <img id="qr-image" src="" alt="UPI QR Code" style="width:100%;height:100%;object-fit:contain;border-radius:8px">
+            </div>
+            <div style="font-size:24px;font-weight:800;font-family:var(--font-display);color:#fbbf24;margin:16px 0">₹49 <span style="font-size:14px;color:var(--text-muted);font-family:var(--font-body)">one-time</span></div>
+            <div style="background:var(--glass);border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:20px;font-size:13px">
+              <div style="color:var(--text-muted);margin-bottom:4px">UPI ID</div>
+              <div style="font-weight:700;color:var(--blue)" id="upi-id">pushkarrana@upi</div>
+            </div>
+            <div style="font-size:12px;color:var(--text-muted);margin-bottom:20px">Pay exactly ₹49. After payment, click the button below.</div>
+            <button class="btn btn-primary" style="width:100%;justify-content:center;padding:14px" onclick="showConfirmStep()">
+              I've Made the Payment →
+            </button>
+          </div>
+
+          <!-- Confirm Step -->
+          <div id="confirm-step" style="display:none">
+            <div style="font-size:32px;margin-bottom:16px">✅</div>
+            <h3 style="font-family:var(--font-display);font-size:20px;font-weight:800;margin-bottom:8px">Payment Made?</h3>
+            <p style="font-size:13px;color:var(--text-secondary);margin-bottom:24px">Please enter your UPI transaction ID to help us verify your payment faster.</p>
+
+            <div class="form-group" style="text-align:left">
+              <label class="form-label">Your Name</label>
+              <input type="text" class="form-input" id="payer-name" placeholder="Full name">
+            </div>
+            <div class="form-group" style="text-align:left">
+              <label class="form-label">Transaction ID (Optional)</label>
+              <input type="text" class="form-input" id="txn-id" placeholder="UPI Transaction ID">
+            </div>
+            <div class="form-group" style="text-align:left">
+              <label class="form-label">Your Email / Phone</label>
+              <input type="text" class="form-input" id="payer-contact" placeholder="For access confirmation">
+            </div>
+
+            <button class="btn btn-primary btn-lg" style="width:100%;justify-content:center" onclick="confirmPayment()">
+              Confirm Payment 🚀
+            </button>
+            <button class="btn btn-ghost btn-sm" style="margin-top:12px" onclick="showScanStep()">← Back to QR</button>
+          </div>
+
+          <!-- Success Step -->
+          <div id="success-step" style="display:none;padding:20px 0">
+            <div style="font-size:48px;margin-bottom:16px">🎉</div>
+            <h3 style="font-family:var(--font-display);font-size:22px;font-weight:800;margin-bottom:12px">Payment Submitted!</h3>
+            <p style="font-size:14px;color:var(--text-secondary);margin-bottom:24px;line-height:1.7">Your payment has been received. Our team will verify and activate your course access within <strong style="color:var(--blue)">10–30 minutes</strong>.</p>
+            <div style="background:rgba(59,130,246,0.08);border:1px solid rgba(59,130,246,0.15);border-radius:12px;padding:16px;margin-bottom:24px;font-size:13px;text-align:left">
+              <div style="font-weight:700;margin-bottom:8px">What happens next?</div>
+              <div style="color:var(--text-muted);line-height:1.8">
+                1. We receive your Telegram notification<br>
+                2. Admin verifies your payment<br>
+                3. Course unlocks automatically<br>
+                4. You'll receive email confirmation
+              </div>
+            </div>
+            <a href="courses.html" class="btn btn-primary" style="width:100%;justify-content:center;">Browse Other Courses</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="js/storage.js"></script>
+<script src="js/courses.js"></script>
+<script>
+  let currentCourseId = '';
+  let currentCourse = null;
+
+  function init() {
+    const urlParams = new URLSearchParams(window.location.search);
+    currentCourseId = urlParams.get('course');
+    if (!currentCourseId) { window.location.href = 'courses.html'; return; }
+
+    const user = INTIX.requireAuth();
+    if (!user) return;
+
+    currentCourse = COURSES.find(c => c.id === currentCourseId);
+    if (!currentCourse) { window.location.href = 'courses.html'; return; }
+
+    if (INTIX.hasPremium(currentCourseId)) {
+      toast('You already have access to this course!', 'success');
+      setTimeout(() => window.location.href = `course-view.html?id=${currentCourseId}`, 1500);
+      return;
+    }
+
+    renderNav('courses');
+
+    document.getElementById('payment-emoji').textContent = currentCourse.emoji;
+    document.getElementById('payment-course-name').textContent = currentCourse.title;
+    document.getElementById('payment-level').textContent = currentCourse.level;
+
+    // Pre-fill user name
+    document.getElementById('payer-name').value = user.name || '';
+    document.getElementById('payer-contact').value = user.email || '';
+
+    // Generate QR code - UPI deeplink
+    const upiId = 'pushkarrana@upi'; // Replace with real UPI ID
+    const upiString = `upi://pay?pa=${upiId}&pn=INTIX+EDUCATION&am=49&cu=INR&tn=INTIX+Premium+${encodeURIComponent(currentCourse.title)}`;
+    const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(upiString)}&bgcolor=ffffff&color=0b0f19&margin=10`;
+    document.getElementById('qr-image').src = qrUrl;
+    document.getElementById('upi-id').textContent = upiId;
+  }
+
+  function showConfirmStep() {
+    document.getElementById('scan-step').style.display = 'none';
+    document.getElementById('confirm-step').style.display = 'block';
+    document.getElementById('step-2-indicator').style.opacity = '1';
+    document.getElementById('step-2-indicator').querySelector('div').style.background = 'var(--blue)';
+  }
+
+  function showScanStep() {
+    document.getElementById('scan-step').style.display = 'block';
+    document.getElementById('confirm-step').style.display = 'none';
+    document.getElementById('step-2-indicator').style.opacity = '0.4';
+  }
+
+  async function confirmPayment() {
+    const name = document.getElementById('payer-name').value.trim();
+    const txnId = document.getElementById('txn-id').value.trim();
+    const contact = document.getElementById('payer-contact').value.trim();
+
+    if (!name) { toast('Please enter your name', 'error'); return; }
+
+    const user = INTIX.getUser();
+    const paymentData = {
+      courseId: currentCourseId,
+      courseName: currentCourse.title,
+      amount: 49,
+      name,
+      email: user?.email || contact,
+      txnId: txnId || 'Not provided',
+      time: new Date().toLocaleString('en-IN')
+    };
+
+    INTIX.logPayment(paymentData);
+
+    const msg = `💳 <b>PAYMENT REQUEST</b>\n\n👤 Name: ${name}\n📧 Email: ${user?.email || contact}\n📖 Course: ${currentCourse.title}\n💰 Amount: ₹49\n🧾 TXN ID: ${txnId || 'Not provided'}\n🕐 Time: ${new Date().toLocaleString('en-IN')}\n\n⚠️ Please verify & approve in admin panel`;
+
+    await sendTelegram(msg);
+
+    document.getElementById('confirm-step').style.display = 'none';
+    document.getElementById('success-step').style.display = 'block';
+    toast('Payment confirmation sent!', 'success');
+  }
+
+  // Responsive layout
+  if (window.innerWidth < 768) {
+    document.getElementById('payment-layout').style.gridTemplateColumns = '1fr';
+  }
+
+  init();
+</script>
+</body>
+</html>
